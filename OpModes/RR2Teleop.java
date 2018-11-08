@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
-import org.firstinspires.ftc.teamcode.MecanumChassis;
+import org.firstinspires.ftc.teamcode.Utilities.*;
 
 @TeleOp(name = "RR2Teleop(Java)", group = "")
-public class RR2Teleop extends LinearOpMode {
+public class RR2Teleop extends OpMode {
 
   private DcMotor leftF;
   private DcMotor rightF;
@@ -29,7 +29,7 @@ public class RR2Teleop extends LinearOpMode {
    * This function is executed when this Op Mode is selected from the Driver Station.
    */
   @Override
-  public void runOpMode() {
+  public void init() {
     leftF = hardwareMap.dcMotor.get("leftF");
     rightF = hardwareMap.dcMotor.get("rightF");
     leftB = hardwareMap.dcMotor.get("leftB");
@@ -37,29 +37,21 @@ public class RR2Teleop extends LinearOpMode {
     chassis = new MecanumChassis(leftF, rightF, leftB, rightB);
     lift = hardwareMap.dcMotor.get("lift");
     androidTextToSpeech = new AndroidTextToSpeech();
-
     // Put initialization blocks here.
     androidTextToSpeech.initialize();
     androidTextToSpeech.setLanguageAndCountry("en", "US");
     lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    
-    waitForStart();
-    if (opModeIsActive()) {
-      // Put run blocks here.
-      androidTextToSpeech.setPitch(1);
-      //androidTextToSpeech.speak("Get to the choppa!");
-      while (opModeIsActive()) {
-        // Put loop blocks here.
-        getInput();
-        chassis.driveMecanum(forward, clockwise, right);
-        moveLift();
-        telemetry.addData("Angle:", lift.getCurrentPosition());
-        telemetry.update();
-      }
-    }
+  }
 
-    androidTextToSpeech.close();
+  @Override
+  public void loop() {
+    // Put loop blocks here.
+    getInput();
+    chassis.driveMecanum(forward, clockwise, right);
+    moveLift();
+    telemetry.addData("Angle:", lift.getCurrentPosition());
+    telemetry.update();
   }
 
   /**

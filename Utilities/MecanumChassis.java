@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Utilities;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -15,7 +15,7 @@ public class MecanumChassis {
     DcMotor rR;
     double variance = 2.2;
     
-    MecanumChassis(DcMotor frontLeft, DcMotor frontRight, DcMotor rearLeft, DcMotor rearRight) {
+    public MecanumChassis(DcMotor frontLeft, DcMotor frontRight, DcMotor rearLeft, DcMotor rearRight) {
         //Sets all the motors to be in class variables
         fL = frontLeft;
         fR = frontRight;

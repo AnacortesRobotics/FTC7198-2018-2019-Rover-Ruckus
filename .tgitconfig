@@ -1,0 +1,6 @@
+[bugtraq]
+	url = https://github.com/anacortesftcrobotics/2018-2019-Rover-Ruckus-7198/issues/%BUGID%
+	message = Fixes: %BUGID%
+	append = true
+	number = false
+	warnifnoissue = true

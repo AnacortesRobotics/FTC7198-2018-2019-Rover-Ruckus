@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import java.util.Locale;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Utilities.*;
 
 @Autonomous(name = "RR2Auto2_DepotSide", group = "RR2")
 public class RR2Auto2_DepotSide extends LinearOpMode {
