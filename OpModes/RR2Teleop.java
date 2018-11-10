@@ -20,10 +20,11 @@ public class RR2Teleop extends OpMode {
   private DcMotor body;
   private DcMotor slide;
   private DcMotor spinner;
-  private DcMotor lift;
+  private DcMotor liftMotor;
   //Create subsection objects
   private MecanumChassis chassis;
   private Collector collector;
+  private Lift lift;
   //Add necessary variables
   private double forward;
   private double clockwise;
@@ -31,6 +32,7 @@ public class RR2Teleop extends OpMode {
   private double bodyPower;
   private double slidePower;
   private double spinnerPower;
+  private double liftPower;
 
   /**
    * This function is executed when this Op Mode is selected from the Driver Station.
@@ -45,13 +47,11 @@ public class RR2Teleop extends OpMode {
     body = hardwareMap.dcMotor.get("body");
     slide = hardwareMap.dcMotor.get("slide");
     spinner = hardwareMap.dcMotor.get("spinner");
-    lift = hardwareMap.dcMotor.get("lift");
+    liftMotor = hardwareMap.dcMotor.get("lift");
     //Set up the subsection objects
     chassis = new MecanumChassis(leftF, rightF, leftB, rightB);
     collector = new Collector(body, slide, spinner);
-    //Make necessary motor mode adjustments
-    lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    lift = new Lift(liftMotor);
   }
   
   /**
@@ -59,12 +59,12 @@ public class RR2Teleop extends OpMode {
    */
   @Override
   public void loop() {
-    // Put loop blocks here.
+    // Gets input, then runs the correct functions.
     getInput();
     chassis.driveMecanum(forward, clockwise, right);
     collector.driveCollector(bodyPower, slidePower, spinnerPower);
-    moveLift();
-    telemetry.addData("Angle:", lift.getCurrentPosition());
+    lift.driveLift(liftPower);
+    telemetry.addData("Angle:", liftMotor.getCurrentPosition());
     telemetry.update();
   }
 
@@ -78,12 +78,6 @@ public class RR2Teleop extends OpMode {
     bodyPower = gamepad2.left_trigger*(-gamepad2.right_trigger);
     slidePower = gamepad2.left_stick_y;
     spinnerPower = gamepad2.right_stick_y;
-  }
-
-  /**
-   * Describe this function...
-   */
-  private void moveLift() {
-    lift.setPower((-gamepad1.left_trigger)+(gamepad1.right_trigger));
+    liftPower = (-gamepad1.left_trigger)+(gamepad1.right_trigger);
   }
 }

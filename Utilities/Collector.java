@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.Utilities;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-
 public class Collector {
     DcMotor body;
     DcMotor slide;
