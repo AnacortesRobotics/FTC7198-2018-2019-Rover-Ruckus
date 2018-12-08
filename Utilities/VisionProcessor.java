@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Utilities;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -31,7 +32,7 @@ public class VisionProcessor {
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY = "AbfrKYL/////AAAAGfUho+x13kKJkH/SBEqJFnkvL102usBXiZRgdAjtKaiq1x1aXSGd+5abnOmK0BgdlMhCbc4d+gQv5Dl46y5HUqcpoLIXJvG6BDLMPaFX48pqSO9tQlx2FZjTWVbUePzGTnJll5xbVjY8zTNRd7iDUyk9imxm2GzTHyM758Z7oTY0k5m4DV++KgTo6cy2BE495DAUOc+CNVE8gDu003Ua5yF6iclNWeI3NZP1ob8VBOnS0ksriNEtP66HjSiRGyCCiz9HVdA8Z0883MW8sUZ0VAXH2qqsTL57lJ80jqSI7YLZpuShi6EUMr9sCF7UzlE1sD0/8OBiAcs8RQNy2Qc1GtxXb/VDm8q2Q3ZJetTXK/H/";
+    private static final String VUFORIA_KEY = "AYtXqHz/////AAABmU3In0fAY0/fn8QX5iqlqwNJT9qVS7+g0Jh8f32jZWG0vH9a0eAOw0L1KQosfbN20wfjaVq/1eALYOkGFmXFGFxKPVcuh5sT0VkVjhdxO8wld1Z+kBMrNNIEAF2h4bYL9y6WIeTOPM1vrhgX65NwMVSsDgjQEA2YhSSnCxjEcIYOmxJWwiErP26uPxRaWP2OtHtPaxsq0Ru2a4yLJZ3nEYf7btJdIzT1QUIwDlUW+KCNfTOp4kZJQv4KSE4oKi0UDsrUqzr4iDcph9MS3Y5EYTnZP3pI6vKw1EgpNF0P3rwO3fyY4HY1630ge6gB+vwEbB8pTt0uLt9kvdckpxJR705KFL1aso8GwgCtDER53SSY";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -87,7 +88,7 @@ public class VisionProcessor {
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
             if (updatedRecognitions != null) {
               telemetry.addData("# Object Detected", updatedRecognitions.size());
-              if (updatedRecognitions.size() == 3) {
+              if (updatedRecognitions.size() == 2) {
                 int goldMineralX = -1;
                 int silverMineral1X = -1;
                 int silverMineral2X = -1;
@@ -100,17 +101,17 @@ public class VisionProcessor {
                     silverMineral2X = (int) recognition.getLeft();
                   }
                 }
-                if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                  if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                if (goldMineralX != -1 && silverMineral1X != -1) {
+                  if (goldMineralX < silverMineral1X) {
                     telemetry.addData("Gold Mineral Position", "Left");
-                    sample = "left";
-                  } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                    telemetry.addData("Gold Mineral Position", "Right");
                     sample = "left";
                   } else {
                     telemetry.addData("Gold Mineral Position", "Center");
-                    sample = "left";
+                    sample = "center";
                   }
+                } else if (silverMineral1X != -1 && silverMineral2X != -1) {
+                  telemetry.addData("Gold Mineral Position", "Right");
+                  sample = "right";
                 }
               }
               telemetry.update();
@@ -135,7 +136,7 @@ public class VisionProcessor {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CameraDirection.BACK;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -144,7 +145,7 @@ public class VisionProcessor {
     }
 
     /**
-     * Initialize the Tensor Flow Object Detection engine. 
+     * Initialize the Tensor Flow Object Detection engine.
      */
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(

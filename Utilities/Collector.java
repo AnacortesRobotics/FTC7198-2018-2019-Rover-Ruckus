@@ -14,8 +14,8 @@ public class Collector {
     }
     
     public void driveCollector(double bodyPower, double slidePower, double collectPower) {
-        body.setPower(bodyPower);
-        slide.setPower(slidePower);
+        body.setPower(bodyPower*0.7);
+        slide.setPower(slidePower*0.7);
         spinner.setPower(collectPower);
         
     }

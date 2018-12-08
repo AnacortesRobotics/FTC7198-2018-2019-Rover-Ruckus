@@ -15,8 +15,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
-@Autonomous(name = "RR2Auto2_CraterSide", group = "RR2")
-public class RR2Auto2_CraterSide extends LinearOpMode {
+@Autonomous(name = "RR2Auto2_DepotSide_WebCam", group = "RR2")
+public class RR2Auto2_DepotSide_WebCam extends LinearOpMode {
   /**
    * This function is executed when this Op Mode is selected from the Driver Station.
    */
@@ -29,12 +29,12 @@ public class RR2Auto2_CraterSide extends LinearOpMode {
   private DcMotor lift;
   private MecanumChassis chassis;
   private Servo mD;
+  
   NormalizedColorSensor colorSensor;
   DistanceSensor distanceSensor;
   
-  private double forward;
-  private double clockwise;
-  private double right;
+  VisionProcessor vision;
+  String sample = "none";
   
   @Override
   public void runOpMode() {
@@ -46,6 +46,13 @@ public class RR2Auto2_CraterSide extends LinearOpMode {
     lift = hardwareMap.dcMotor.get("lift");
     mD = hardwareMap.servo.get("WHY");
     
+    vision = new VisionProcessor();
+    vision.init(telemetry, hardwareMap);
+    vision.activate();
+    sleep(4000);
+    sample = vision.sample();
+    vision.deactivate();
+    
     lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -54,16 +61,55 @@ public class RR2Auto2_CraterSide extends LinearOpMode {
     
     //if (opModeIsActive()) {
       // Put run blocks here.
-      //mD.setPosition(1);
-      //dropLift();
+      telemetry.addData("Position", sample);
+      telemetry.update();
+      mD.setPosition(1);
+      dropLift();
       undoLatch();
-      path1();
-      //sample();
-      //path2();
+      samplePath();
+      //path1();
       depositMarker();
-      //path2();
-      //sleep(5000);
+      path2Dif();
+      sleep(5000);
     //}
+  }
+  
+  private void samplePath() {
+    chassis.controlMecanum("forward", 30, 0.7);
+    while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
+      telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
+      telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
+      telemetry.addData("Rear Left:", "%d", leftB.getCurrentPosition());
+      telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
+      telemetry.update();
+    }
+    if(sample=="left") {
+      chassis.controlMecanum("right", -45, -0.5);
+      while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
+        telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
+        telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
+        telemetry.addData("Rear Left:", "%d", leftB.getCurrentPosition());
+        telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
+        telemetry.update();
+      }
+    } else if (sample=="right") {
+      chassis.controlMecanum("right", 50, 0.5);
+      while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
+        telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
+        telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
+        telemetry.addData("Rear Left:", "%d", leftB.getCurrentPosition());
+        telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
+        telemetry.update();
+      }
+    }
+    chassis.controlMecanum("forward", 30, 0.7);
+    while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
+      telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
+      telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
+      telemetry.addData("Rear Left:", "%d", leftB.getCurrentPosition());
+      telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
+      telemetry.update();
+    }
   }
 
   /**
@@ -150,7 +196,7 @@ public class RR2Auto2_CraterSide extends LinearOpMode {
   /**
    * Describe this function...
    */
-  private void path2() {
+  private void path2Same() {
     telemetry.addData("path2", "Start");
     telemetry.update();
     chassis.controlMecanum("clockwise", -16, -0.5);
@@ -161,7 +207,39 @@ public class RR2Auto2_CraterSide extends LinearOpMode {
       telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
       telemetry.update();
     }
-    mD.setPosition(1);
+    mD.setPosition(0.1);
+    chassis.controlMecanum("forward", 10, 0.7);
+    while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
+      telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
+      telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
+      telemetry.addData("Rear Left:", "%d", leftB.getCurrentPosition());
+      telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
+      telemetry.update();
+    }
+    chassis.controlMecanum("forward", -300, -0.7);
+    while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
+      telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
+      telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
+      telemetry.addData("Rear Left:", "%d", leftB.getCurrentPosition());
+      telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
+      telemetry.update();
+    }
+    telemetry.addData("path2", "End");
+    telemetry.update();
+  }
+  
+  private void path2Dif() {
+    telemetry.addData("path2", "Start");
+    telemetry.update();
+    chassis.controlMecanum("clockwise", 16, 0.5);
+    while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
+      telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
+      telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
+      telemetry.addData("Rear Left:", "%d", leftB.getCurrentPosition());
+      telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
+      telemetry.update();
+    }
+    mD.setPosition(0.1);
     chassis.controlMecanum("forward", 10, 0.7);
     while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
       telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
@@ -188,7 +266,7 @@ public class RR2Auto2_CraterSide extends LinearOpMode {
   private void depositMarker() {
     telemetry.addData("depositMarker", "Start");
     telemetry.update();
-    mD.setPosition(0.7);
+    mD.setPosition(0.8);
     sleep(1000);
     telemetry.addData("depositMarker", "End");
     telemetry.update();
@@ -257,4 +335,3 @@ public class RR2Auto2_CraterSide extends LinearOpMode {
     }
   }
 }
-

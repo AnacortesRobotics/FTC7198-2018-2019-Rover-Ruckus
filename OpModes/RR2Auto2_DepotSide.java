@@ -54,15 +54,13 @@ public class RR2Auto2_DepotSide extends LinearOpMode {
     
     //if (opModeIsActive()) {
       // Put run blocks here.
-      mD.setPosition(1);
-      dropLift();
-      undoLatch();
+      //mD.setPosition(1);
+      //dropLift();
+      //undoLatch();
       path1();
       //sample();
-      //path2();
       depositMarker();
-      path2();
-      //sleep(5000);
+      path2Dif();
     //}
   }
 
@@ -73,8 +71,8 @@ public class RR2Auto2_DepotSide extends LinearOpMode {
     telemetry.addData("dropLift", "Start");
     telemetry.update();
     lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    lift.setTargetPosition(7600);
-    lift.setPower(0.9);
+    lift.setTargetPosition(-15000);
+    lift.setPower(-0.9);
     while(lift.isBusy()) {
       telemetry.addData("Lift:", lift.getCurrentPosition());
       telemetry.update();
@@ -91,7 +89,7 @@ public class RR2Auto2_DepotSide extends LinearOpMode {
   private void undoLatch() {
     telemetry.addData("undoLatch", "Start");
     telemetry.update();
-    chassis.controlMecanum("right", -12, -0.5);
+    chassis.controlMecanum("right", -16, -0.5);
     while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
       telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
       telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
@@ -107,7 +105,7 @@ public class RR2Auto2_DepotSide extends LinearOpMode {
    * Describe this function...
    */
   private void path1() {
-    chassis.controlMecanum("forward", 125, 0.7);
+    chassis.controlMecanum("forward", 100, 0.7);
     while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
       telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
       telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
@@ -150,7 +148,7 @@ public class RR2Auto2_DepotSide extends LinearOpMode {
   /**
    * Describe this function...
    */
-  private void path2() {
+  private void path2Same() {
     telemetry.addData("path2", "Start");
     telemetry.update();
     chassis.controlMecanum("clockwise", -16, -0.5);
@@ -161,7 +159,39 @@ public class RR2Auto2_DepotSide extends LinearOpMode {
       telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
       telemetry.update();
     }
-    mD.setPosition(1);
+    mD.setPosition(0.1);
+    chassis.controlMecanum("forward", 10, 0.7);
+    while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
+      telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
+      telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
+      telemetry.addData("Rear Left:", "%d", leftB.getCurrentPosition());
+      telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
+      telemetry.update();
+    }
+    chassis.controlMecanum("forward", -300, -0.7);
+    while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
+      telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
+      telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
+      telemetry.addData("Rear Left:", "%d", leftB.getCurrentPosition());
+      telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
+      telemetry.update();
+    }
+    telemetry.addData("path2", "End");
+    telemetry.update();
+  }
+  
+  private void path2Dif() {
+    telemetry.addData("path2", "Start");
+    telemetry.update();
+    chassis.controlMecanum("clockwise", 16, 0.5);
+    while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
+      telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
+      telemetry.addData("Front Right:", "%d", rightF.getCurrentPosition());
+      telemetry.addData("Rear Left:", "%d", leftB.getCurrentPosition());
+      telemetry.addData("Rear Right:", "%d", rightB.getCurrentPosition());
+      telemetry.update();
+    }
+    mD.setPosition(0.1);
     chassis.controlMecanum("forward", 10, 0.7);
     while(leftF.isBusy()||rightF.isBusy()||leftB.isBusy()||rightB.isBusy()) {
       telemetry.addData("Front Left:", "%d", leftF.getCurrentPosition());
@@ -188,7 +218,7 @@ public class RR2Auto2_DepotSide extends LinearOpMode {
   private void depositMarker() {
     telemetry.addData("depositMarker", "Start");
     telemetry.update();
-    mD.setPosition(0.7);
+    mD.setPosition(0.8);
     sleep(1000);
     telemetry.addData("depositMarker", "End");
     telemetry.update();
