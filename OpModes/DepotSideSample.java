@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
 @Autonomous(name = "DepotSideSample", group = "RR2")
-public class DepotSideSample extends RR2Auto2 {
+public class DepotSideSample extends RR2Auto3 {
  
   @Override
   public void runOpMode() {

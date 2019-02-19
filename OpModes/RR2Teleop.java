@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -12,19 +13,7 @@ import org.firstinspires.ftc.teamcode.Utilities.*;
 
 @TeleOp(name = "RR2Teleop(Java)", group = "")
 public class RR2Teleop extends OpMode {
-  //Create motor objects
-  private DcMotor leftF;
-  private DcMotor rightF;
-  private DcMotor leftB;
-  private DcMotor rightB;
-  private DcMotor body;
-  private DcMotor slide;
-  private DcMotor spinner;
-  private DcMotor liftMotor;
-  //Create subsection objects
-  private MecanumChassis chassis;
-  private Collector collector;
-  private Lift lift;
+  RR2Robot robot;
   //Add necessary variables
   private double forward;
   private double clockwise;
@@ -33,25 +22,19 @@ public class RR2Teleop extends OpMode {
   private double slidePower;
   private double spinnerPower;
   private double liftPower;
+  private boolean modeFall;
+  private boolean activeHook;
+  private boolean hookFall;
+  private boolean liftFall;
+  private int mode = 1;
+  private int modeMax = 3;
 
   /**
    * This function is executed when this Op Mode is selected from the Driver Station.
    */
   @Override
   public void init() {
-    //Map motor objects to config profile
-    leftF = hardwareMap.dcMotor.get("leftF");
-    rightF = hardwareMap.dcMotor.get("rightF");
-    leftB = hardwareMap.dcMotor.get("leftB");
-    rightB = hardwareMap.dcMotor.get("rightB");
-    body = hardwareMap.dcMotor.get("body");
-    slide = hardwareMap.dcMotor.get("slide");
-    spinner = hardwareMap.dcMotor.get("spinner");
-    liftMotor = hardwareMap.dcMotor.get("lift");
-    //Set up the subsection objects
-    chassis = new MecanumChassis(leftF, rightF, leftB, rightB);
-    collector = new Collector(body, slide, spinner);
-    lift = new Lift(liftMotor);
+    robot = new RR2Robot(telemetry, hardwareMap);
   }
   
   /**
@@ -61,10 +44,11 @@ public class RR2Teleop extends OpMode {
   public void loop() {
     // Gets input, then runs the correct functions.
     getInput();
-    chassis.driveMecanum(forward, clockwise, right);
-    collector.driveCollector(bodyPower, slidePower, spinnerPower);
-    lift.driveLift(liftPower);
-    telemetry.addData("Angle:", liftMotor.getCurrentPosition());
+    robot.chassis.driveMecanum(forward, clockwise, right);
+    robot.collector.driveCollector(bodyPower, slidePower, spinnerPower);
+    robot.lift.driveLift(liftPower, activeHook);
+    telemetry.addLine(robot.lift.toString());
+    telemetry.addData("Mode:", mode);
     telemetry.update();
   }
 
@@ -72,12 +56,68 @@ public class RR2Teleop extends OpMode {
    * This function takes the inputs from the Gamepads and converts them to variables.
    */
   private void getInput() {
+    if(gamepad1.a && !modeFall) {
+      if(mode<modeMax) {
+        mode++;
+      } else {
+        mode=0;
+      }
+      modeFall = true;
+    } else if(!gamepad1.a) {
+      modeFall = false;
+    }
+    switch (mode) {
+      case 0: getInputReg(); break;
+      case 1: getInputForza(); break;
+      case 2: getInputP2Rot(); break;
+    }
+  }
+  
+  private void getInputReg() {
     forward = -((gamepad1.left_stick_y + gamepad1.right_stick_y) / 2);
     right = gamepad1.right_stick_x;
     clockwise = -((gamepad1.left_stick_y - gamepad1.right_stick_y) / 2);
-    bodyPower = (-gamepad2.left_trigger)+(gamepad2.right_trigger);
+    bodyPower = -gamepad2.right_stick_y;
     slidePower = gamepad2.left_stick_y;
-    spinnerPower = gamepad2.right_stick_y;
-    liftPower = (-gamepad1.left_trigger)+(gamepad1.right_trigger);
+    //spinnerPower = gamepad2.right_stick_y;
+    liftPower = (-gamepad2.left_trigger)+(gamepad2.right_trigger);
+    if(gamepad2.a && !hookFall) {
+      activeHook = !activeHook;
+      hookFall = true;
+    } else if(!gamepad2.a) {
+      hookFall = false;
+    }
+  }
+  
+  private void getInputForza() {
+    forward = gamepad1.right_trigger-gamepad1.left_trigger;
+    right = gamepad1.right_stick_x;
+    clockwise = gamepad1.left_stick_x;
+    bodyPower = -gamepad2.right_stick_y;
+    slidePower = gamepad2.left_stick_y;
+    //spinnerPower = gamepad2.right_stick_y;
+    liftPower = (-gamepad2.left_trigger)+(gamepad2.right_trigger);
+    if(gamepad2.a && !hookFall) {
+      activeHook = !activeHook;
+      hookFall = true;
+    } else if(!gamepad2.a) {
+      hookFall = false;
+    }
+  }
+  
+  private void getInputP2Rot() {
+    forward = gamepad1.right_trigger-gamepad1.left_trigger;
+    right = gamepad1.right_stick_x;
+    clockwise = gamepad2.left_stick_x;
+    bodyPower = -gamepad2.right_stick_y;
+    slidePower = gamepad2.left_stick_y;
+    //spinnerPower = gamepad2.right_stick_y;
+    liftPower = (-gamepad2.left_trigger)+(gamepad2.right_trigger);
+    if(gamepad2.a && !hookFall) {
+      activeHook = !activeHook;
+      hookFall = true;
+    } else if(!gamepad2.a) {
+      hookFall = false;
+    }
   }
 }

@@ -15,8 +15,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
-@Autonomous(name = "CraterSide", group = "RR2")
-public class CraterSide extends RR2Auto3 {
+@Autonomous(name = "TestAuto", group = "RR2")
+public class TestAuto extends RR2Auto3 {
  
   @Override
   public void runOpMode() {
@@ -26,16 +26,7 @@ public class CraterSide extends RR2Auto3 {
     
     //if (opModeIsActive()) {
       // Put run blocks here.
-      //mD.setPosition(1);
-      sampleAuto(false);
-      dropLift();
-      undoLatch();
-      path1();
-      //sample();
-      //path2();
-      //depositMarker();
-      //path2();
-      //sleep(5000);
+      testFunction();
     //}
   }
 }
