@@ -32,7 +32,7 @@ public abstract class RR2Auto3 extends LinearOpMode {
   
   public void initRobot() {
     robot = new RR2Robot(telemetry, hardwareMap);
-    
+    telemetry.setAutoClear(false);
     vision = new VisionProcessor();
     vision.init(telemetry, hardwareMap);
     vision.activate();
@@ -45,7 +45,7 @@ public abstract class RR2Auto3 extends LinearOpMode {
     } else if (sample=="right") {
       robot.chassis.controlMecanum("right", 50, 0.5);
     } else {
-      robot.chassis.controlMecanum("right", -10, 0.7);
+      robot.chassis.controlMecanum("right", 10, 0.7);
     }
     robot.chassis.controlMecanum("forward", 30, 0.7);
   }
@@ -124,7 +124,8 @@ public abstract class RR2Auto3 extends LinearOpMode {
     if (sample=="right") {
       robot.chassis.controlMecanum("right", 30, 0.8);
     } else {
-      robot.chassis.controlMecanum("right", -30, -0.8);
+      robot.chassis.controlMecanum("right", -20, -0.8);
+      robot.chassis.controlMecanum("clockwise", 12, 0.5);
     }
     if (sample=="right") {
       robot.chassis.controlMecanum("forward", 200, 0.7);
