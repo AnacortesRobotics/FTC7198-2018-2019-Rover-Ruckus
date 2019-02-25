@@ -41,7 +41,7 @@ public abstract class RR2Auto3 extends LinearOpMode {
   public void samplePath() {
     robot.chassis.controlMecanum("forward", 30, 0.7);
     if(sample=="left") {
-      robot.chassis.controlMecanum("right", -45, -0.5);
+      robot.chassis.controlMecanum("right", -37, -0.5);
     } else if (sample=="right") {
       robot.chassis.controlMecanum("right", 50, 0.5);
     } else {
@@ -111,30 +111,29 @@ public abstract class RR2Auto3 extends LinearOpMode {
       robot.chassis.controlMecanum("forward", 60, 0.7);
       robot.chassis.controlMecanum("clockwise", -16, -0.5);
       robot.chassis.controlMecanum("forward", 30, 0.7);
+    } else if (sample == "left"){
+      robot.chassis.controlMecanum("forward", 60, 0.7);
     } else {
       robot.chassis.controlMecanum("forward", 85, 0.7);
     }
-    robot.markerArm.setPosition(0.8);
+    robot.markerArm.setPosition(0.9);
     sleep(1000);
+    robot.markerArm.setPosition(0.5);
     if (sample=="right") {
       robot.chassis.controlMecanum("clockwise", -25, -0.5);
+      robot.chassis.controlMecanum("right", 38, 0.8);
+      robot.chassis.controlMecanum("forward", 160, 0.7);
     } else if(sample=="center"||sample=="TensorError") {
-      robot.chassis.controlMecanum("clockwise", 12, 0.5);
-    }
-    if (sample=="right") {
-      robot.chassis.controlMecanum("right", 30, 0.8);
-    } else {
+      robot.chassis.controlMecanum("clockwise", 15, 0.5);
       robot.chassis.controlMecanum("right", -20, -0.8);
-      robot.chassis.controlMecanum("clockwise", 12, 0.5);
-    }
-    if (sample=="right") {
-      robot.chassis.controlMecanum("forward", 200, 0.7);
-    } else {
-      robot.chassis.controlMecanum("forward", -90, -0.7);
+      robot.chassis.controlMecanum("forward", -140, -0.7);
       robot.chassis.controlMecanum("clockwise", 50, 0.5);
-      robot.chassis.controlMecanum("forward", 90, -0.7);
+    } else {
+      robot.chassis.controlMecanum("clockwise", 15, 0.5);
+      robot.chassis.controlMecanum("forward", -130, -0.7);
+      robot.chassis.controlMecanum("clockwise", 60, 0.5);
     }
-    robot.collector.controlCollector(110,0);
+    robot.collector.controlCollector(140,5);
     telemetry.addData("path2", "End");
     telemetry.update();
   }

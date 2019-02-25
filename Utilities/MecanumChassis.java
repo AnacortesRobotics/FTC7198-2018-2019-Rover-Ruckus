@@ -121,6 +121,8 @@ public class MecanumChassis {
         break;
       }
       while(frontLeft.isBusy()||frontRight.isBusy()||rearLeft.isBusy()||rearRight.isBusy()) {
+        telemetry.addData("Type: ", type);
+        telemetry.addData("Amount: ", distance);
         telemetry.addData("Front Left:", "%d", frontLeft.getCurrentPosition());
         telemetry.addData("Front Right:", "%d", frontRight.getCurrentPosition());
         telemetry.addData("Rear Left:", "%d", rearLeft.getCurrentPosition());

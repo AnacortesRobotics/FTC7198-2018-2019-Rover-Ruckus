@@ -129,10 +129,13 @@ public class VisionProcessor {
                 if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                   if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                     telemetry.addData("Gold Mineral Position", "Left");
+                    sample = "left";
                   } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                     telemetry.addData("Gold Mineral Position", "Right");
+                    sample = "right";
                   } else {
                     telemetry.addData("Gold Mineral Position", "Center");
+                    sample = "center";
                   }
                 }
               }

@@ -9,6 +9,7 @@ public class Collector {
     //Plus 25:1 worm drive
     static final double COUNTS_PER_MOTOR_SLIDE = 145.6;
     double countsPerDegree = COUNTS_PER_MOTOR_BODY*24.0/360.0;
+    double countsPerInch = COUNTS_PER_MOTOR_SLIDE/4;
     
     Telemetry telemetry;
     
@@ -40,11 +41,15 @@ public class Collector {
     
     public void controlCollector(int bodyDegrees, int slideDistance) {
         body.setTargetPosition((int)Math.floor(bodyDegrees*countsPerDegree));
-        telemetry.addData("Target Pos:", body.getTargetPosition());
+        slide.setTargetPosition((int)Math.floor(-slideDistance*countsPerInch));
+        telemetry.addData("Body Target:", body.getTargetPosition());
+        telemetry.addData("Slide Target:", slide.getTargetPosition());
         telemetry.update();
         body.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         body.setPower(0.5);
-        while(body.isBusy()) {
+        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slide.setPower(0.5);
+        while(body.isBusy()||slide.isBusy()) {
             telemetry.addData("Target Pos:", body.getTargetPosition());
             telemetry.addData("Current Pos:", body.getCurrentPosition());
             telemetry.update();
