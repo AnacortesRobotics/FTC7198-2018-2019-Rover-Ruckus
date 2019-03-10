@@ -30,7 +30,7 @@ public class CraterSideSample extends RR2Auto3 {
       dropLift();
       undoLatch();
       samplePath();
-      path1();
+      craterPath();
     //}
   }
 }

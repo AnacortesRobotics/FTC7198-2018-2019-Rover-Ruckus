@@ -26,7 +26,7 @@ public class TestAuto extends RR2Auto3 {
     
     //if (opModeIsActive()) {
       // Put run blocks here.
-      testFunction();
+      rotate(-45, 0.8);
     //}
   }
 }

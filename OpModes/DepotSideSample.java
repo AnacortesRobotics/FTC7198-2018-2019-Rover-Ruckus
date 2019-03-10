@@ -26,14 +26,11 @@ public class DepotSideSample extends RR2Auto3 {
     
     //if (opModeIsActive()) {
       // Put run blocks here.
-      //mD.setPosition(1);
       sampleAuto(true);
       dropLift();
       undoLatch();
       samplePath();
       path2Sample();
-      //path2();
-      //sleep(5000);
     //}
   }
 }

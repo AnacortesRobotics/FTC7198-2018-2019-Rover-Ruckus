@@ -37,6 +37,9 @@ public class Lift {
         while(liftMotor.isBusy()) {
             loops++;
         }
+        while(liftHook.getPosition()<0.9) {
+            
+        }
         liftMotor.setTargetPosition(3150);
         while(liftMotor.isBusy()) {
             loops++;
