@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.Utilities;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import java.lang.annotation.Target;
+import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Collector {
     DcMotor body, slide;
+    Servo spinner;
     static final double COUNTS_PER_MOTOR_BODY = 383.6;
     //Plus 25:1 worm drive
     static final double COUNTS_PER_MOTOR_SLIDE = 145.6;
@@ -16,6 +19,7 @@ public class Collector {
     public Collector(RR2Robot r) {
         body = r.hardwareMap.dcMotor.get("body");
         slide = r.hardwareMap.dcMotor.get("slide");
+        spinner = r.hardwareMap.servo.get("spinner");
         //Tell motors to brake when not moving
         body.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -31,12 +35,15 @@ public class Collector {
     
     public String toString() {
         return "Angle: " + body.getCurrentPosition() + 
-        "\nSlide: " + slide.getCurrentPosition();
+        "\nSlide: " + slide.getCurrentPosition() +
+        "\nSpinner: " + spinner.getPosition();
     }
     
     public void driveCollector(double bodyPower, double slidePower, double collectPower) {
         body.setPower(bodyPower*0.8);
         slide.setPower(slidePower*0.3);
+        spinner.setPosition(collectPower);
+        
     }
     
     public void controlCollector(int bodyDegrees, int slideDistance) {
@@ -46,9 +53,9 @@ public class Collector {
         telemetry.addData("Slide Target:", slide.getTargetPosition());
         telemetry.update();
         body.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        body.setPower(0.5);
+        body.setPower(0.4);
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slide.setPower(0.5);
+        slide.setPower(0.4);
         while(body.isBusy()||slide.isBusy()) {
             telemetry.addData("Target Pos:", body.getTargetPosition());
             telemetry.addData("Current Pos:", body.getCurrentPosition());

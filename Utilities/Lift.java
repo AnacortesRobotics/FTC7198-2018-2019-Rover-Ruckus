@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Lift {
     DcMotor liftMotor;
     Servo liftHook;
-    public Lift(RR2Robot r) {
+    RR2Robot r;
+    public Lift(RR2Robot _r) {
+        r = _r;
         liftMotor = r.hardwareMap.dcMotor.get("lift");
         liftHook = r.hardwareMap.servo.get("liftHook");
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -30,16 +32,16 @@ public class Lift {
     public void dropLift() {
         //3300
         int loops = 0;
-        liftMotor.setTargetPosition(-100);
+        liftMotor.setTargetPosition(-150);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(0.7);
+        liftMotor.setPower(1);
         liftHook.setPosition(1);
-        while(liftMotor.isBusy()) {
+        while(liftMotor.isBusy()&&!r.linearOpMode.isStopRequested()) {
             loops++;
+            r.telemetry.addData("Lift Pos", liftMotor.getCurrentPosition());
+            r.telemetry.update();
         }
-        while(liftHook.getPosition()<0.9) {
-            
-        }
+        r.linearOpMode.sleep(500);
         liftMotor.setTargetPosition(3150);
         while(liftMotor.isBusy()) {
             loops++;

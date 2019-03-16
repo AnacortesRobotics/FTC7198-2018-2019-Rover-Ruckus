@@ -24,6 +24,7 @@ public class RR2Teleop extends OpMode {
   private double liftPower;
   private boolean modeFall;
   private boolean activeHook;
+  private boolean activeLift;
   private boolean hookFall;
   private boolean liftFall;
   private int mode = 1;
@@ -34,7 +35,7 @@ public class RR2Teleop extends OpMode {
    */
   @Override
   public void init() {
-    robot = new RR2Robot(telemetry, hardwareMap);
+    robot = new RR2Robot(telemetry, hardwareMap, this);
   }
   
   /**
@@ -47,7 +48,7 @@ public class RR2Teleop extends OpMode {
     robot.chassis.driveMecanum(forward, clockwise, right);
     robot.collector.driveCollector(bodyPower, slidePower, spinnerPower);
     robot.lift.driveLift(liftPower, activeHook);
-    telemetry.addLine(robot.lift.toString());
+    telemetry.addLine(robot.collector.toString());
     telemetry.addData("Mode:", mode);
     telemetry.update();
   }
@@ -56,7 +57,7 @@ public class RR2Teleop extends OpMode {
    * This function takes the inputs from the Gamepads and converts them to variables.
    */
   private void getInput() {
-    if(gamepad1.a && !modeFall) {
+    /*if(gamepad1.a && !modeFall) {
       if(mode<modeMax) {
         mode++;
       } else {
@@ -65,7 +66,7 @@ public class RR2Teleop extends OpMode {
       modeFall = true;
     } else if(!gamepad1.a) {
       modeFall = false;
-    }
+    }*/
     switch (mode) {
       case 0: getInputReg(); break;
       case 1: getInputForza(); break;
@@ -95,13 +96,23 @@ public class RR2Teleop extends OpMode {
     clockwise = gamepad1.left_stick_x;
     bodyPower = -gamepad2.right_stick_y;
     slidePower = gamepad2.left_stick_y;
-    //spinnerPower = gamepad2.right_stick_y;
-    liftPower = (-gamepad2.left_trigger)+(gamepad2.right_trigger);
+    spinnerPower = (-gamepad2.left_trigger)+(gamepad2.right_trigger)+0.5;
+    if (activeLift){
+      liftPower = gamepad1.left_stick_y;
+    } else {
+      liftPower = 0;
+    }
     if(gamepad2.a && !hookFall) {
       activeHook = !activeHook;
       hookFall = true;
     } else if(!gamepad2.a) {
       hookFall = false;
+    }
+    if(gamepad1.b && !liftFall) {
+      activeLift = !activeLift;
+      hookFall = true;
+    } else if(!gamepad2.b) {
+      liftFall = false;
     }
   }
   

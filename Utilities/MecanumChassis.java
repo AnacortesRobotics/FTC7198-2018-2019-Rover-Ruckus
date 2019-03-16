@@ -16,14 +16,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class MecanumChassis {
     DcMotor frontLeft, frontRight, rearLeft, rearRight;
-    BNO055IMU imu;
-    Orientation lastAngles;
     Telemetry telemetry;
     double frontLeftP, frontRightP, rearLeftP, rearRightP = 0;
     double variance = 2.2;
-    double globalAngle, correction;
+    RR2Robot r;
     
-    public MecanumChassis(RR2Robot r) {
+    public MecanumChassis(RR2Robot _r) {
+        r = _r;
         telemetry = r.telemetry;
         //Sets all the motors to be in class variables
         frontLeft = r.hardwareMap.dcMotor.get("leftF");
@@ -48,16 +47,6 @@ public class MecanumChassis {
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled = false;
-        
-        imu = r.hardwareMap.get(BNO055IMU.class, "imu");
-        
-        imu.initialize(parameters);
     }
     
     public String toString() {
@@ -140,6 +129,7 @@ public class MecanumChassis {
       while(frontLeft.isBusy()||frontRight.isBusy()||rearLeft.isBusy()||rearRight.isBusy()) {
         telemetry.addData("Type: ", type);
         telemetry.addData("Amount: ", distance);
+        telemetry.addData("Distance", r.getDist());
         telemetry.addData("Front Left:", "%d", frontLeft.getCurrentPosition());
         telemetry.addData("Front Right:", "%d", frontRight.getCurrentPosition());
         telemetry.addData("Rear Left:", "%d", rearLeft.getCurrentPosition());
@@ -148,42 +138,11 @@ public class MecanumChassis {
       }
     }
     
-    public void resetAngle() {
-      lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-      globalAngle = 0;
-    }
-    
-    public double getAngle() {
-      Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-      double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
-      
-      if (deltaAngle < -180) {
-        deltaAngle += 360;
-      } else if (deltaAngle > 180) {
-        deltaAngle -= 360;
+    public void electricSlide(double dist) {
+      while (r.getDist()>dist) {
+        driveMecanum(0,0,-0.7);
       }
-      
-      globalAngle += deltaAngle;
-      
-      lastAngles = angles;
-      
-      return globalAngle;
-    }
-    
-    private double checkDirection() {
-      double correction, angle, gain = .10;
-      
-      angle = getAngle();
-      
-      if (angle == 0) {
-        correction = 0;
-      } else {
-        correction = -angle;
-      }
-      
-      correction = correction * gain;
-      
-      return correction;
+      driveMecanum(0,0,0);
     }
     
     public void rotate(double degrees, double power) {
@@ -193,28 +152,37 @@ public class MecanumChassis {
       rearLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
       rearRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
       
-      resetAngle();
+      r.poseTracker.resetAngle();
+      
       if (degrees < 0) {
-        leftPower = power;
-        rightPower = -power;
-      } else if (degrees > 0) {
-        leftPower = -power;
-        rightPower = power;
-      } else return;
+        setPower(power,-power);
+        while(r.poseTracker.getAngle() == degrees) {
+          telemetry.addData("Angle:", r.poseTracker.getAngle());
+          telemetry.update();
+        }
+        while(r.poseTracker.getAngle() > degrees) {
+          double correction = 1-r.poseTracker.getAngle()/degrees;
+          if (correction<0.1) correction = 0.1;
+          setPower(power*correction,-power*correction);
+          telemetry.addData("Angle:", r.poseTracker.getAngle());
+          telemetry.addData("Correction:", correction);
+          telemetry.update();
+        }
+      } else if (degrees > 0){
+        setPower(-power,power);
+        while(r.poseTracker.getAngle() < degrees) {
+          double correction = 1-r.poseTracker.getAngle()/degrees;
+          if (correction<0.1) correction = 0.1;
+          setPower(-power*correction,power*correction);
+          telemetry.addData("Angle:", r.poseTracker.getAngle());
+          telemetry.addData("Correction:", correction);
+          telemetry.update();
+        }
+      }
       
-      frontLeft.setPower(leftPower);
-      frontRight.setPower(rightPower);
-      rearLeft.setPower(leftPower);
-      rearRight.setPower(rightPower);
-    }
-    
-    public void endRotate() {
-      frontLeft.setPower(0);
-      frontRight.setPower(0);
-      rearLeft.setPower(0);
-      rearRight.setPower(0);
+      setPower(0,0);
       
-      resetAngle();
+      r.poseTracker.resetAngle();
     }
     
     public double getPower(String side) {

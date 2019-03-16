@@ -23,15 +23,13 @@ public abstract class RR2Auto3 extends LinearOpMode {
   static final int COUNTS_PER_MOTOR_REV = 1680; 
   private RR2Robot robot;
   
-  VisionProcessor vision;
   String sample = "none";
   
   public void initRobot() {
-    robot = new RR2Robot(telemetry, hardwareMap);
+    robot = new RR2Robot(telemetry, hardwareMap, this);
     telemetry.setAutoClear(false);
-    vision = new VisionProcessor();
-    vision.init(telemetry, hardwareMap);
-    vision.activate();
+    robot.vision.init(telemetry, hardwareMap);
+    robot.vision.activate();
   }
   
   public void samplePath() {
@@ -40,15 +38,17 @@ public abstract class RR2Auto3 extends LinearOpMode {
       robot.chassis.controlMecanum("right", -37, -0.5);
     } else if (sample=="right") {
       robot.chassis.controlMecanum("right", 50, 0.5);
+    } else {
+      robot.chassis.controlMecanum("right", 13, 0.5);
     }
     robot.chassis.controlMecanum("forward", 30, 0.7);
   }
 
   public void sampleAuto(boolean toSample) {
     if(toSample) {
-      sample = vision.sample();
+      sample = robot.vision.sample();
     }
-    vision.deactivate();
+    robot.vision.deactivate();
     telemetry.addData("Sample side",sample);
     telemetry.update();
     sleep(2000);
@@ -59,8 +59,9 @@ public abstract class RR2Auto3 extends LinearOpMode {
   public void dropLift() {
     telemetry.addData("dropLift", "Start");
     telemetry.update();
-    robot.chassis.resetAngle();
     robot.lift.dropLift();
+    robot.poseTracker.resetAngle();
+    robot.collector.controlCollector(25,0);
     telemetry.addData("dropLift", "End");
     telemetry.update();
   }
@@ -72,8 +73,6 @@ public abstract class RR2Auto3 extends LinearOpMode {
     telemetry.addData("undoLatch", "Start");
     telemetry.update();
     robot.chassis.controlMecanum("right", -16, -0.5);
-    double angle = robot.chassis.getAngle();
-    rotate(-angle,0.8);
     telemetry.addData("undoLatch", "End");
     telemetry.update();
   }
@@ -94,10 +93,9 @@ public abstract class RR2Auto3 extends LinearOpMode {
     robot.chassis.controlMecanum("forward", 60, 0.7);
     robot.markerArm.setPosition(0.7);
     sleep(1000);
-    rotate(135,0.8);
+    robot.chassis.rotate(135,0.8);
     robot.chassis.controlMecanum("forward", 180, 0.8);
-    robot.collector.controlCollector(60,0);
-    robot.collector.controlCollector(120,15);
+    robot.collector.controlCollector(100,15);
     telemetry.addData("path2", "End");
     telemetry.update();
   }
@@ -107,32 +105,33 @@ public abstract class RR2Auto3 extends LinearOpMode {
     telemetry.update();
     if (sample=="right") {
       robot.chassis.controlMecanum("forward", 60, 0.7);
-      rotate(45,0.8);
+      robot.chassis.rotate(45,0.8);
       robot.chassis.controlMecanum("forward", 30, 0.7);
-    } else if (sample == "left"){
-      robot.chassis.controlMecanum("forward", 60, 0.7);
-    } else {
-      robot.chassis.controlMecanum("forward", 85, 0.7);
-    }
-    robot.markerArm.setPosition(0.9);
-    sleep(1000);
-    robot.markerArm.setPosition(0.5);
-    if (sample=="right") {
-      rotate(90,0.8);
-      robot.chassis.controlMecanum("right", 38, 0.8);
+      robot.markerArm.setPosition(0.9);
+      sleep(1000);
+      robot.markerArm.setPosition(0.5);
+      robot.chassis.rotate(90,0.8);
+      robot.chassis.controlMecanum("right", 50, 0.8);
       robot.chassis.controlMecanum("forward", 160, 0.7);
     } else if(sample=="center"||sample=="TensorError") {
-      rotate(-45,0.8);
-      robot.chassis.controlMecanum("right", -5, -0.8);
+      robot.chassis.controlMecanum("forward", 60, 0.7);
+      robot.chassis.rotate(-45,0.8);
+      robot.chassis.electricSlide(10);
+      robot.markerArm.setPosition(0.9);
+      sleep(1000);
+      robot.markerArm.setPosition(0.5);
       robot.chassis.controlMecanum("forward", -140, -0.7);
-      rotate(-180,0.8);
+      robot.chassis.rotate(-180,0.8);
     } else {
-      rotate(-45,0.8);
+      robot.chassis.controlMecanum("forward", 80, 0.6);
+      robot.markerArm.setPosition(0.9);
+      sleep(1000);
+      robot.markerArm.setPosition(0.5);
+      robot.chassis.rotate(-45,0.8);
       robot.chassis.controlMecanum("forward", -130, -0.7);
-      robot.chassis.controlMecanum("clockwise", 60, 0.5);
+      robot.chassis.rotate(180,0.8);
     }
-    robot.collector.controlCollector(60,0);
-    robot.collector.controlCollector(120,15);
+    robot.collector.controlCollector(100,10);
     telemetry.addData("path2", "End");
     telemetry.update();
   }
@@ -155,42 +154,16 @@ public abstract class RR2Auto3 extends LinearOpMode {
   public void craterPath() {
     telemetry.addData("craterPath", "Start");
     telemetry.update();
-    robot.collector.controlCollector(60,0);
-    robot.collector.controlCollector(120,15);
+    robot.chassis.controlMecanum("forward", 10, 0.5);
+    robot.collector.controlCollector(100,0);
     telemetry.addData("craterPath", "End");
     telemetry.update();
   }
   
   public void testFunction() {
-    robot.collector.controlCollector(-2,0);
-  }
-  
-  //Fails at low power levels
-  public void rotate(double target, double power) {
-    robot.chassis.rotate(target, power);
-    if (target < 0) {
-      while(opModeIsActive() && robot.chassis.getAngle() == target) {
-        telemetry.addData("Angle:", robot.chassis.getAngle());
-        telemetry.update();
-      }
-      while(opModeIsActive() && robot.chassis.getAngle() > target) {
-        double correction = 1-robot.chassis.getAngle()/target;
-        if (correction<0.1) correction = 0.1;
-        robot.chassis.setPower(power*correction,-power*correction);
-        telemetry.addData("Angle:", robot.chassis.getAngle());
-        telemetry.addData("Correction:", correction);
-        telemetry.update();
-      }
-    } else {
-      while(opModeIsActive() && robot.chassis.getAngle() < target) {
-        double correction = 1-robot.chassis.getAngle()/target;
-        if (correction<0.1) correction = 0.1;
-        robot.chassis.setPower(-power*correction,power*correction);
-        telemetry.addData("Angle:", robot.chassis.getAngle());
-        telemetry.addData("Correction:", correction);
-        telemetry.update();
-      }
-    }
-    robot.chassis.endRotate();
+    telemetry.setAutoClear(true);
+    robot.chassis.rotate(90,0.7);
+    robot.chassis.rotate(-90,0.7);
+    sleep(500);
   }
 }
