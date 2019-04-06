@@ -32,7 +32,7 @@ public class Lift {
     public void dropLift() {
         //3300
         int loops = 0;
-        liftMotor.setTargetPosition(-150);
+        liftMotor.setTargetPosition(-75);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftMotor.setPower(1);
         liftHook.setPosition(1);
@@ -43,7 +43,7 @@ public class Lift {
         }
         r.linearOpMode.sleep(500);
         liftMotor.setTargetPosition(3150);
-        while(liftMotor.isBusy()) {
+        while(liftMotor.isBusy()&&!r.linearOpMode.isStopRequested()) {
             loops++;
         }
     }

@@ -126,7 +126,7 @@ public class MecanumChassis {
           rearRight.setPower(-power);
         break;
       }
-      while(frontLeft.isBusy()||frontRight.isBusy()||rearLeft.isBusy()||rearRight.isBusy()) {
+      while((frontLeft.isBusy()||frontRight.isBusy()||rearLeft.isBusy()||rearRight.isBusy())&&!r.linearOpMode.isStopRequested()) {
         telemetry.addData("Type: ", type);
         telemetry.addData("Amount: ", distance);
         telemetry.addData("Distance", r.getDist());
@@ -139,7 +139,7 @@ public class MecanumChassis {
     }
     
     public void electricSlide(double dist) {
-      while (r.getDist()>dist) {
+      while (r.getDist()>dist&&!r.linearOpMode.isStopRequested()) {
         driveMecanum(0,0,-0.7);
       }
       driveMecanum(0,0,0);
@@ -160,7 +160,7 @@ public class MecanumChassis {
           telemetry.addData("Angle:", r.poseTracker.getAngle());
           telemetry.update();
         }
-        while(r.poseTracker.getAngle() > degrees) {
+        while(r.poseTracker.getAngle() > degrees&&!r.linearOpMode.isStopRequested()) {
           double correction = 1-r.poseTracker.getAngle()/degrees;
           if (correction<0.1) correction = 0.1;
           setPower(power*correction,-power*correction);
@@ -170,7 +170,7 @@ public class MecanumChassis {
         }
       } else if (degrees > 0){
         setPower(-power,power);
-        while(r.poseTracker.getAngle() < degrees) {
+        while(r.poseTracker.getAngle() < degrees&&!r.linearOpMode.isStopRequested()) {
           double correction = 1-r.poseTracker.getAngle()/degrees;
           if (correction<0.1) correction = 0.1;
           setPower(-power*correction,power*correction);

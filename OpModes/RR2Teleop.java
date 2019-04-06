@@ -27,7 +27,7 @@ public class RR2Teleop extends OpMode {
   private boolean activeLift;
   private boolean hookFall;
   private boolean liftFall;
-  private int mode = 1;
+  private int mode = 0;
   private int modeMax = 3;
 
   /**
@@ -78,10 +78,10 @@ public class RR2Teleop extends OpMode {
     forward = -((gamepad1.left_stick_y + gamepad1.right_stick_y) / 2);
     right = gamepad1.right_stick_x;
     clockwise = -((gamepad1.left_stick_y - gamepad1.right_stick_y) / 2);
-    bodyPower = -gamepad2.right_stick_y;
-    slidePower = gamepad2.left_stick_y;
-    //spinnerPower = gamepad2.right_stick_y;
-    liftPower = (-gamepad2.left_trigger)+(gamepad2.right_trigger);
+    bodyPower = -gamepad2.left_stick_y;
+    slidePower = gamepad2.right_stick_y;
+    spinnerPower = (-gamepad2.left_trigger)+(gamepad2.right_trigger)+0.5;
+    liftPower = gamepad1.right_trigger-gamepad1.left_trigger;
     if(gamepad2.a && !hookFall) {
       activeHook = !activeHook;
       hookFall = true;
@@ -109,10 +109,11 @@ public class RR2Teleop extends OpMode {
       hookFall = false;
     }
     if(gamepad1.b && !liftFall) {
-      activeLift = !activeLift;
-      hookFall = true;
+      //activeLift = !activeLift;
+      robot.lift.raiseLift();
+      liftFall = true;
     } else if(!gamepad2.b) {
-      liftFall = false;
+      //liftFall = false;
     }
   }
   

@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
-public abstract class RR2Auto3 extends LinearOpMode {
+public abstract class RR2Auto4 extends LinearOpMode {
   /**
    * This function is executed when this Op Mode is selected from the Driver Station.
    */
@@ -35,9 +35,9 @@ public abstract class RR2Auto3 extends LinearOpMode {
   public void samplePath() {
     robot.chassis.controlMecanum("forward", 30, 0.7);
     if(sample=="left") {
-      robot.chassis.controlMecanum("right", -37, -0.5);
+      robot.chassis.rotate(30,0.7);
     } else if (sample=="right") {
-      robot.chassis.controlMecanum("right", 50, 0.7);
+      robot.chassis.rotate(-45,0.7);
     } else {
       robot.chassis.controlMecanum("right", 13, 0.5);
     }
@@ -104,15 +104,13 @@ public abstract class RR2Auto3 extends LinearOpMode {
     telemetry.addData("path2", "Start");
     telemetry.update();
     if (sample=="right") {
-      robot.chassis.controlMecanum("forward", 60, 0.7);
-      robot.chassis.rotate(45,0.8);
-      robot.chassis.controlMecanum("forward", 30, 0.7);
+      robot.chassis.controlMecanum("forward", 20, 0.7);
+      robot.chassis.electricSlide(10);
       robot.markerArm.setPosition(0.9);
       sleep(1000);
       robot.markerArm.setPosition(0.5);
-      robot.chassis.rotate(90,0.8);
-      robot.chassis.controlMecanum("right", 60, 0.8);
-      robot.chassis.controlMecanum("forward", 160, 0.7);
+      robot.chassis.controlMecanum("forward", -140, -0.7);
+      robot.chassis.rotate(-180,0.8);
     } else if(sample=="center"||sample=="TensorError") {
       robot.chassis.controlMecanum("forward", 60, 0.7);
       robot.chassis.rotate(-45,0.8);
@@ -123,7 +121,8 @@ public abstract class RR2Auto3 extends LinearOpMode {
       robot.chassis.controlMecanum("forward", -140, -0.7);
       robot.chassis.rotate(-180,0.8);
     } else {
-      robot.chassis.controlMecanum("forward", 80, 0.6);
+      robot.chassis.rotate(-45,0.8);
+      robot.chassis.controlMecanum("forward", 55, 0.6);
       robot.markerArm.setPosition(0.9);
       sleep(1000);
       robot.markerArm.setPosition(0.5);

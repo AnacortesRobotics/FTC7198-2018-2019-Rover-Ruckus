@@ -15,8 +15,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
-@Autonomous(name = "DepotSideSample", group = "RR2")
-public class DepotSideSample extends RR2Auto4 {
+@Autonomous(name = "TestTeamMarker", group = "RR2")
+public class TestTeamMarker extends RR2Auto4 {
  
   @Override
   public void runOpMode() {
@@ -26,11 +26,16 @@ public class DepotSideSample extends RR2Auto4 {
     
     //if (opModeIsActive()) {
       // Put run blocks here.
-      sampleAuto(true);
-      dropLift();
-      undoLatch();
-      samplePath();
-      path2Sample();
+      //mD.setPosition(1);
+      //sampleAuto(false);
+      //dropLift();
+      //undoLatch();
+      //path1();
+      //sample();
+      //path2();
+      depositMarker();
+      //path2();
+      //sleep(5000);
     //}
   }
 }

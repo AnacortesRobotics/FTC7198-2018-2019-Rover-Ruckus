@@ -13,10 +13,12 @@ public class Collector {
     static final double COUNTS_PER_MOTOR_SLIDE = 145.6;
     double countsPerDegree = COUNTS_PER_MOTOR_BODY*24.0/360.0;
     double countsPerInch = COUNTS_PER_MOTOR_SLIDE/4;
+    RR2Robot r;
     
     Telemetry telemetry;
     
-    public Collector(RR2Robot r) {
+    public Collector(RR2Robot _r) {
+        r = _r;
         body = r.hardwareMap.dcMotor.get("body");
         slide = r.hardwareMap.dcMotor.get("slide");
         spinner = r.hardwareMap.servo.get("spinner");
@@ -56,7 +58,7 @@ public class Collector {
         body.setPower(0.4);
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slide.setPower(0.4);
-        while(body.isBusy()||slide.isBusy()) {
+        while((body.isBusy()||slide.isBusy())&&!r.linearOpMode.isStopRequested()) {
             telemetry.addData("Target Pos:", body.getTargetPosition());
             telemetry.addData("Current Pos:", body.getCurrentPosition());
             telemetry.update();
