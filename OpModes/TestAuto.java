@@ -15,6 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
+/**
+ * Used to test specific sections of Auto without running the whole program
+ */
 @Autonomous(name = "TestAuto", group = "RR2")
 public class TestAuto extends RR2Auto3 {
  

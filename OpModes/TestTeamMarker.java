@@ -15,6 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
+/**
+ * Tests whether the current robot setup allows for safely depositing the Team Marker
+ */
 @Autonomous(name = "TestTeamMarker", group = "RR2")
 public class TestTeamMarker extends RR2Auto4 {
  

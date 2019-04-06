@@ -15,6 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
+/**
+ * Used for Crater Side, samples minerals
+ */
 @Autonomous(name = "CraterSideSample", group = "RR2")
 public class CraterSideSample extends RR2Auto3 {
  
@@ -24,14 +27,11 @@ public class CraterSideSample extends RR2Auto3 {
     
     waitForStart();
     
-    //if (opModeIsActive()) {
-      // Put run blocks here.
-      sampleAuto(true);
-      dropLift();
-      undoLatch();
-      samplePath();
-      craterPath();
-    //}
+	sampleAuto(true);
+	dropLift();
+	undoLatch();
+	samplePath();
+	craterPath();
   }
 }
 

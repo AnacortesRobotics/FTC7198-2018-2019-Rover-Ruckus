@@ -57,6 +57,7 @@ public class RR2Teleop extends OpMode {
    * This function takes the inputs from the Gamepads and converts them to variables.
    */
   private void getInput() {
+	// Not in use because all drivers agreed getInputForza() was the best
     /*if(gamepad1.a && !modeFall) {
       if(mode<modeMax) {
         mode++;
@@ -66,14 +67,17 @@ public class RR2Teleop extends OpMode {
       modeFall = true;
     } else if(!gamepad1.a) {
       modeFall = false;
-    }*/
+    }
     switch (mode) {
       case 0: getInputReg(); break;
       case 1: getInputForza(); break;
       case 2: getInputP2Rot(); break;
-    }
+    }*/
+	
+	getInputForza();
   }
   
+  // Sets fields based on gamepad inputs using a driving style based on a common drive standard in FTC
   private void getInputReg() {
     forward = -((gamepad1.left_stick_y + gamepad1.right_stick_y) / 2);
     right = gamepad1.right_stick_x;
@@ -90,6 +94,7 @@ public class RR2Teleop extends OpMode {
     }
   }
   
+  // Sets fields based on gamepad inputs using a driving style based on a game called Forza
   private void getInputForza() {
     forward = gamepad1.right_trigger-gamepad1.left_trigger;
     right = gamepad1.right_stick_x;
@@ -117,6 +122,7 @@ public class RR2Teleop extends OpMode {
     }
   }
   
+  // Sets fields based on gamepad inputs using a driving style based on a game called Forza, but allows Driver 2 to control robot rotation
   private void getInputP2Rot() {
     forward = gamepad1.right_trigger-gamepad1.left_trigger;
     right = gamepad1.right_stick_x;

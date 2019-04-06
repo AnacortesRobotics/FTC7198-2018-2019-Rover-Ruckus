@@ -15,6 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
+/**
+ * Used for Depot Side, samples minerals
+ */
 @Autonomous(name = "DepotSideSample", group = "RR2")
 public class DepotSideSample extends RR2Auto4 {
  
@@ -24,14 +27,11 @@ public class DepotSideSample extends RR2Auto4 {
     
     waitForStart();
     
-    //if (opModeIsActive()) {
-      // Put run blocks here.
-      sampleAuto(true);
-      dropLift();
-      undoLatch();
-      samplePath();
-      path2Sample();
-    //}
+	sampleAuto(true);
+	dropLift();
+	undoLatch();
+	samplePath();
+	path2Sample();
   }
 }
 

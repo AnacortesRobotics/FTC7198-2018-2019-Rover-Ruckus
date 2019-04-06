@@ -11,28 +11,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.Came
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
-
+// This is a class that uses a camera to find target elements based on the Rover Ruckus game
 public class VisionProcessor {
+	
+	// Define class constants
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
-    private String sample = "failedInit";
-    private Telemetry telemetry;
-    private HardwareMap hardwareMap;
-
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
     private static final String VUFORIA_KEY = "AYtXqHz/////AAABmU3In0fAY0/fn8QX5iqlqwNJT9qVS7+g0Jh8f32jZWG0vH9a0eAOw0L1KQosfbN20wfjaVq/1eALYOkGFmXFGFxKPVcuh5sT0VkVjhdxO8wld1Z+kBMrNNIEAF2h4bYL9y6WIeTOPM1vrhgX65NwMVSsDgjQEA2YhSSnCxjEcIYOmxJWwiErP26uPxRaWP2OtHtPaxsq0Ru2a4yLJZ3nEYf7btJdIzT1QUIwDlUW+KCNfTOp4kZJQv4KSE4oKi0UDsrUqzr4iDcph9MS3Y5EYTnZP3pI6vKw1EgpNF0P3rwO3fyY4HY1630ge6gB+vwEbB8pTt0uLt9kvdckpxJR705KFL1aso8GwgCtDER53SSY";
+	
+	// Define robot objects
+	private Telemetry telemetry;
+    private HardwareMap hardwareMap;
+	
+	// Define necessary fields
+    private String sample = "failedInit";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -46,41 +39,39 @@ public class VisionProcessor {
      */
     private TFObjectDetector tfod;
     
-    public void VisionProcessor() {
-    }
-    // SKJ - Changed constructor name
-    // from: VisionProcessing
-    // to: VisionProcessor
-    // added second parameter for hardwaremap
-    // added private property for hardwaremap
-    // assigned parameter to property in this constructor
+	// Constructs a VisionProcessor object
+    public void VisionProcessor() {};
+	
+	// Initialize Vuforia and TensorFlow
     public void init(Telemetry tInput, HardwareMap hwMap) {
         telemetry = tInput;
         hardwareMap = hwMap;
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
-
+		
+		// Check to make sure a TensorFlow analysis is possible, then initialize it if it is
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
             sample = "none";
         } else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-            
         }
 
-        /** Wait for the game to begin */
+        // Wait for the game to begin
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
         sample = "TensorError";
     }
     
+	// Activate the TensorFlow analysis
     public void activate() {
         if (tfod != null) {
                 tfod.activate();
         }
     }
     
+	// Sample the current camera frames with TensorFlow and return which side the gold cube is on
     public String sample () {
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
@@ -145,19 +136,17 @@ public class VisionProcessor {
         return sample;
     }
     
+	// Deactivate the TensorFlow analysis
     public void deactivate() {
         if (tfod != null) {
             tfod.shutdown();
         }
     }
     
-    /**
-     * Initialize the Vuforia localization engine.
-     */
+    // Initialize the Vuforia localization engine
     private void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
+		
+        //Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
@@ -169,9 +158,7 @@ public class VisionProcessor {
         // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
     }
 
-    /**
-     * Initialize the Tensor Flow Object Detection engine.
-     */
+    // Initialize the Tensor Flow Object Detection engine
     private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());

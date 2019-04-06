@@ -15,16 +15,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
+/**
+ * Abstract auto class version 3
+ */
 public abstract class RR2Auto3 extends LinearOpMode {
-  /**
-   * This function is executed when this Op Mode is selected from the Driver Station.
-   */
-   //AndyMark: 1680
-  static final int COUNTS_PER_MOTOR_REV = 1680; 
+
+  // Define robot object
   private RR2Robot robot;
   
+  // Define sample string
   String sample = "none";
   
+  // Initialize robot object for Auto
   public void initRobot() {
     robot = new RR2Robot(telemetry, hardwareMap, this);
     telemetry.setAutoClear(false);
@@ -32,6 +34,7 @@ public abstract class RR2Auto3 extends LinearOpMode {
     robot.vision.activate();
   }
   
+  // Move from lander to sample field, targeting the identified mineral
   public void samplePath() {
     robot.chassis.controlMecanum("forward", 30, 0.7);
     if(sample=="left") {
@@ -44,6 +47,7 @@ public abstract class RR2Auto3 extends LinearOpMode {
     robot.chassis.controlMecanum("forward", 30, 0.7);
   }
 
+  // Use the vision robot object to sample and display the location
   public void sampleAuto(boolean toSample) {
     if(toSample) {
       sample = robot.vision.sample();
@@ -53,9 +57,8 @@ public abstract class RR2Auto3 extends LinearOpMode {
     telemetry.update();
     sleep(2000);
   }
-  /**
-   * Describe this function...
-   */
+  
+  // Lowers robot from lander, moves collector out to improve weight distribution for Mecanum accuracy
   public void dropLift() {
     telemetry.addData("dropLift", "Start");
     telemetry.update();
@@ -66,9 +69,7 @@ public abstract class RR2Auto3 extends LinearOpMode {
     telemetry.update();
   }
 
-  /**
-   * Describe this function...
-   */
+  // Slide the lift out of the lander mount
   public void undoLatch() {
     telemetry.addData("undoLatch", "Start");
     telemetry.update();
@@ -77,16 +78,12 @@ public abstract class RR2Auto3 extends LinearOpMode {
     telemetry.update();
   }
 
-  /**
-   * Describe this function...
-   */
+  // Moves the robot forward a little bit
   public void path1() {
     robot.chassis.controlMecanum("forward", 50, 0.7);
   }
   
-  /**
-   * Describe this function...
-   */
+  // Deposits the team marker and moves to opposing lander without sampling
   public void path2NoSample() {
     telemetry.addData("path2", "Start");
     telemetry.update();
@@ -100,6 +97,7 @@ public abstract class RR2Auto3 extends LinearOpMode {
     telemetry.update();
   }
   
+  // Deposits the team marker, samples, and moves to opposing lander
   public void path2Sample() {
     telemetry.addData("path2", "Start");
     telemetry.update();
@@ -136,9 +134,7 @@ public abstract class RR2Auto3 extends LinearOpMode {
     telemetry.update();
   }
 
-  /**
-   * Describe this function...
-   */
+  // Deposits Team Marker
   public void depositMarker() {
     telemetry.addData("depositMarker", "Start");
     telemetry.update();
@@ -148,9 +144,7 @@ public abstract class RR2Auto3 extends LinearOpMode {
     telemetry.update();
   }
   
-  /**
-   * Describe this function...
-   */
+  // Moves to the crater and parks
   public void craterPath() {
     telemetry.addData("craterPath", "Start");
     telemetry.update();
@@ -160,6 +154,7 @@ public abstract class RR2Auto3 extends LinearOpMode {
     telemetry.update();
   }
   
+  // Used for testing commands without running the entire Auto, See TestAuto.java
   public void testFunction() {
     telemetry.setAutoClear(true);
     robot.chassis.rotate(90,0.7);
