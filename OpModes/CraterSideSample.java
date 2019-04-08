@@ -20,18 +20,17 @@ import org.firstinspires.ftc.teamcode.Utilities.*;
  */
 @Autonomous(name = "CraterSideSample", group = "RR2")
 public class CraterSideSample extends RR2Auto3 {
- 
-  @Override
-  public void runOpMode() {
-    initRobot();
-    
-    waitForStart();
-    
-	sampleAuto(true);
-	dropLift();
-	undoLatch();
-	samplePath();
-	craterPath();
-  }
-}
 
+    @Override
+    public void runOpMode() {
+        initRobot();
+
+        waitForStart();
+
+        sampleAuto(true);
+        dropLift();
+        undoLatch();
+        samplePath();
+        craterPath();
+    }
+}

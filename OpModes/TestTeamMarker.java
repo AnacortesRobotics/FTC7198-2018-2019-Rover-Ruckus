@@ -20,26 +20,13 @@ import org.firstinspires.ftc.teamcode.Utilities.*;
  */
 @Autonomous(name = "TestTeamMarker", group = "RR2")
 public class TestTeamMarker extends RR2Auto4 {
- 
-  @Override
-  public void runOpMode() {
-    initRobot();
-    
-    waitForStart();
-    
-    //if (opModeIsActive()) {
-      // Put run blocks here.
-      //mD.setPosition(1);
-      //sampleAuto(false);
-      //dropLift();
-      //undoLatch();
-      //path1();
-      //sample();
-      //path2();
-      depositMarker();
-      //path2();
-      //sleep(5000);
-    //}
-  }
-}
 
+    @Override
+    public void runOpMode() {
+        initRobot();
+
+        waitForStart();
+
+        depositMarker();
+    }
+}

@@ -20,17 +20,13 @@ import org.firstinspires.ftc.teamcode.Utilities.*;
  */
 @Autonomous(name = "TestAuto", group = "RR2")
 public class TestAuto extends RR2Auto3 {
- 
-  @Override
-  public void runOpMode() {
-    initRobot();
-    
-    waitForStart();
-    
-    //if (opModeIsActive()) {
-      // Put run blocks here.
-      testFunction();
-    //}
-  }
-}
 
+    @Override
+    public void runOpMode() {
+        initRobot();
+
+        waitForStart();
+
+        testFunction();
+    }
+}

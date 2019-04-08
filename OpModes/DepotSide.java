@@ -16,22 +16,21 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
 /**
- * Used for Depot Side, doesn't sample minerals
+ * Used for Crater Side, samples minerals
  */
 @Autonomous(name = "DepotSide", group = "RR2")
 public class DepotSide extends RR2Auto3 {
- 
-  @Override
-  public void runOpMode() {
-    initRobot();
-    
-    waitForStart();
 
-	sampleAuto(false);
-	dropLift();
-	undoLatch();
-	path1();
-	path2NoSample();
-  }
+    @Override
+    public void runOpMode() {
+        initRobot();
+
+        waitForStart();
+
+        sampleAuto(false);
+        dropLift();
+        undoLatch();
+        path1();
+        path2NoSample();
+    }
 }
-
