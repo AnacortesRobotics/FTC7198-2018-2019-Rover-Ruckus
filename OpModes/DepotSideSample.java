@@ -20,18 +20,17 @@ import org.firstinspires.ftc.teamcode.Utilities.*;
  */
 @Autonomous(name = "DepotSideSample", group = "RR2")
 public class DepotSideSample extends RR2Auto4 {
- 
-  @Override
-  public void runOpMode() {
-    initRobot();
-    
-    waitForStart();
-    
-	sampleAuto(true);
-	dropLift();
-	undoLatch();
-	samplePath();
-	path2Sample();
-  }
-}
 
+    @Override
+    public void runOpMode() {
+        initRobot();
+
+        waitForStart();
+
+        sampleAuto(true);
+        dropLift();
+        undoLatch();
+        samplePath();
+        path2Sample();
+    }
+}
