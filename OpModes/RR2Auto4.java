@@ -128,6 +128,7 @@ public abstract class RR2Auto4 extends LinearOpMode {
             robot.chassis.controlMecanum("forward", -130, -0.7);
             robot.chassis.rotate(180, 0.8);
         }
+        robot.collector.controlCollector(80, 0);
         robot.collector.controlCollector(100, 10);
         telemetry.addData("path2", "End");
         telemetry.update();

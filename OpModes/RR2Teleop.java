@@ -102,22 +102,18 @@ public class RR2Teleop extends OpMode {
         bodyPower = -gamepad2.right_stick_y;
         slidePower = gamepad2.left_stick_y;
         spinnerPower = (-gamepad2.left_trigger) + (gamepad2.right_trigger) + 0.5;
-        if (activeLift) {
-            liftPower = gamepad1.left_stick_y;
-        } else {
-            liftPower = 0;
-        }
+        liftPower = gamepad2.dpad_up?1:gamepad2.dpad_down?-1:0;
         if (gamepad2.a && !hookFall) {
             activeHook = !activeHook;
             hookFall = true;
         } else if (!gamepad2.a) {
             hookFall = false;
         }
-        if (gamepad1.b && !liftFall) {
+        if (gamepad1.y && !liftFall) {
             //activeLift = !activeLift;
             robot.lift.raiseLift();
             liftFall = true;
-        } else if (!gamepad2.b) {
+        } else if (!gamepad2.y) {
             //liftFall = false;
         }
     }
