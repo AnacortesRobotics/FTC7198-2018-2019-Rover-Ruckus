@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Utilities.*;
  * Used to test specific sections of Auto without running the whole program
  */
 @Autonomous(name = "TestAuto", group = "RR2")
-public class TestAuto extends RR2Auto3 {
+public class TestAuto extends RR2Auto4 {
 
     @Override
     public void runOpMode() {

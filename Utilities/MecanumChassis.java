@@ -158,8 +158,23 @@ public class MecanumChassis {
 
     // Moves left until it gets a specified distance away from a wall
     public void electricSlide(double dist) {
+        
+        // Reset all motor encoders
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rearLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rearRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //Tell motors to run with encoders
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rearLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rearRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        
+        driveMecanum(0, 0, -0.7);
         while (r.getDist() > dist && !r.linearOpMode.isStopRequested()) {
-            driveMecanum(0, 0, -0.7);
+            r.telemetry.addData("Dist:", r.getDist());
+            r.telemetry.update();
         }
         driveMecanum(0, 0, 0);
     }

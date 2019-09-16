@@ -12,6 +12,9 @@ public class Lift {
     // Define hardware objects
     DcMotor liftMotor;
     Servo liftHook;
+    
+    //Set Vars
+    int prevPos = 0;
 
     // Constructs a Lift object
     public Lift(RR2Robot _r) {
@@ -68,12 +71,15 @@ public class Lift {
 
         // Lower robot to ground
         liftMotor.setTargetPosition(3150); // Note: 3300 MAX, otherwise will hit lift end
-        while (liftMotor.isBusy() && !r.linearOpMode.isStopRequested()) {
+        while (liftMotor.isBusy() && !r.linearOpMode.isStopRequested() && liftMotor.getCurrentPosition() != prevPos) {
             loops++;
+            prevPos = liftMotor.getCurrentPosition();
+            r.telemetry.addData("Lift Pos", prevPos);
+            r.telemetry.update();
         }
     }
 
-    // Lift the robot
+    // Lift the robot Note: Not working, needs to apply hook??
     public void raiseLift() {
         int loops = 0;
 

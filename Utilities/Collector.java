@@ -57,13 +57,21 @@ public class Collector {
     // Sets the speed of each motor based on user inputs, applying a slowdown to the goBILDA motors because otherwise they move too fast
     public void driveCollector(double bodyPower, double slidePower, double collectPower) {
         body.setPower(bodyPower * 0.8);
-        slide.setPower(slidePower * 0.3);
+        slide.setPower(slidePower * 0.2);
         spinner.setPosition(collectPower);
 
     }
 
     // Moves the motors to a specified position
     public void controlCollector(int targetBodyDegrees, int targetSlideDistance) {
+        
+        // Resets all motor encoders
+        body.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Set motors to use encoders
+        body.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Set target positions
         body.setTargetPosition((int) Math.floor(targetBodyDegrees * countsPerDegree));

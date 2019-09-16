@@ -24,9 +24,9 @@ public class RR2Teleop extends OpMode {
     private double liftPower;
     private boolean modeFall;
     private boolean activeHook;
-    private boolean activeLift;
+    private boolean activeArm;
     private boolean hookFall;
-    private boolean liftFall;
+    private boolean armFall;
     private int mode = 0;
     private int modeMax = 3;
 
@@ -48,6 +48,7 @@ public class RR2Teleop extends OpMode {
         robot.chassis.driveMecanum(forward, clockwise, right);
         robot.collector.driveCollector(bodyPower, slidePower, spinnerPower);
         robot.lift.driveLift(liftPower, activeHook);
+        robot.markerArm.setPosition(activeArm?0.5:0);
         telemetry.addLine(robot.collector.toString());
         telemetry.addData("Mode:", mode);
         telemetry.update();
@@ -109,12 +110,12 @@ public class RR2Teleop extends OpMode {
         } else if (!gamepad2.a) {
             hookFall = false;
         }
-        if (gamepad1.y && !liftFall) {
-            //activeLift = !activeLift;
-            robot.lift.raiseLift();
-            liftFall = true;
+        
+        if (gamepad1.y && !armFall) {
+            activeArm = !activeArm;
+            armFall = true;
         } else if (!gamepad2.y) {
-            //liftFall = false;
+            armFall = false;
         }
     }
 

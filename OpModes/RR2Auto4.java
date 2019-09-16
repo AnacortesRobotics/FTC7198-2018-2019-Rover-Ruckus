@@ -29,7 +29,7 @@ public abstract class RR2Auto4 extends LinearOpMode {
     // Initialize robot object for Auto
     public void initRobot() {
         robot = new RR2Robot(telemetry, hardwareMap, this);
-        telemetry.setAutoClear(false);
+        //telemetry.setAutoClear(false);
         robot.vision.init();
         robot.vision.activate();
     }
@@ -38,7 +38,8 @@ public abstract class RR2Auto4 extends LinearOpMode {
     public void samplePath() {
         robot.chassis.controlMecanum("forward", 30, 0.7);
         if (sample == "left") {
-            robot.chassis.rotate(30, 0.7);
+            robot.chassis.rotate(45, 0.7);
+            robot.chassis.controlMecanum("forward", 10, 0.6);
         } else if (sample == "right") {
             robot.chassis.rotate(-45, 0.7);
         } else {
@@ -102,12 +103,12 @@ public abstract class RR2Auto4 extends LinearOpMode {
         telemetry.addData("path2", "Start");
         telemetry.update();
         if (sample == "right") {
-            robot.chassis.controlMecanum("forward", 20, 0.7);
+            robot.chassis.controlMecanum("forward", 35, 0.7);
             robot.chassis.electricSlide(10);
             robot.markerArm.setPosition(0.9);
             sleep(1000);
             robot.markerArm.setPosition(0.5);
-            robot.chassis.controlMecanum("forward", -140, -0.7);
+            robot.chassis.controlMecanum("forward", -150, -0.7);
             robot.chassis.rotate(-180, 0.8);
         } else if (sample == "center" || sample == "TensorError") {
             robot.chassis.controlMecanum("forward", 60, 0.7);
@@ -121,15 +122,16 @@ public abstract class RR2Auto4 extends LinearOpMode {
         } else {
             robot.chassis.rotate(-45, 0.8);
             robot.chassis.controlMecanum("forward", 55, 0.6);
+            robot.chassis.rotate(-45, 0.8);
+            robot.chassis.electricSlide(3);
             robot.markerArm.setPosition(0.9);
             sleep(1000);
             robot.markerArm.setPosition(0.5);
-            robot.chassis.rotate(-45, 0.8);
             robot.chassis.controlMecanum("forward", -130, -0.7);
-            robot.chassis.rotate(180, 0.8);
+            robot.chassis.rotate(-180, 0.8);
         }
         robot.collector.controlCollector(80, 0);
-        robot.collector.controlCollector(100, 10);
+        robot.collector.controlCollector(100, 2);
         telemetry.addData("path2", "End");
         telemetry.update();
     }
@@ -157,8 +159,9 @@ public abstract class RR2Auto4 extends LinearOpMode {
     // Used for testing commands without running the entire Auto, See TestAuto.java
     public void testFunction() {
         telemetry.setAutoClear(true);
-        robot.chassis.rotate(90, 0.7);
-        robot.chassis.rotate(-90, 0.7);
+        //robot.collector.controlCollector(25, 10);
+        //robot.collector.controlCollector(80, 0);
+        //robot.collector.controlCollector(100, 10);
         sleep(500);
     }
 }
